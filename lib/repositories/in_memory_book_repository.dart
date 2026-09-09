@@ -1,17 +1,46 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/book.dart';
 import '../models/page_result.dart';
 import 'book_repository.dart';
 
 class InMemoryBookRepository implements BookRepository {
-  final List<Book> _books = [];
+  List<Book> _books = [];
   int _nextId = 1;
+  static const String _storageKey = 'books_data';
 
   InMemoryBookRepository() {
+    _loadFromStorage();
+  }
+
+  Future<void> _loadFromStorage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = prefs.getString(_storageKey);
+      
+      if (jsonString != null && jsonString.isNotEmpty) {
+        final List<dynamic> jsonList = json.decode(jsonString);
+        _books = jsonList.map((json) => Book.fromJson(json as Map<String, dynamic>)).toList();
+        _nextId = _books.isEmpty ? 1 : _books.map((b) => b.id).reduce((a, b) => a > b ? a : b) + 1;
+        return;
+      }
+    } catch (e) {
+    }
     _initSeedData();
+    _saveToStorage();
+  }
+
+  Future<void> _saveToStorage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonList = _books.map((book) => book.toJson()).toList();
+      await prefs.setString(_storageKey, json.encode(jsonList));
+    } catch (e) {
+    }
   }
 
   void _initSeedData() {
-    final seedBooks = [
+    _books = [
       Book(id: _nextId++, title: 'Война и мир', isbn: '978-5-17-118752-4', year: 1869, pages: 1300, publisherId: 1, authorIds: [1], genreIds: [1, 2], copiesTotal: 10, copiesAvailable: 7),
       Book(id: _nextId++, title: 'Преступление и наказание', isbn: '978-5-17-118753-1', year: 1866, pages: 672, publisherId: 1, authorIds: [2], genreIds: [1, 3], copiesTotal: 8, copiesAvailable: 5),
       Book(id: _nextId++, title: 'Анна Каренина', isbn: '978-5-17-118754-8', year: 1878, pages: 864, publisherId: 2, authorIds: [1], genreIds: [1, 2], copiesTotal: 6, copiesAvailable: 4),
@@ -33,7 +62,6 @@ class InMemoryBookRepository implements BookRepository {
       Book(id: _nextId++, title: 'Капитанская дочка', isbn: '978-5-17-118770-8', year: 1836, pages: 320, publisherId: 3, authorIds: [6], genreIds: [2, 1], copiesTotal: 8, copiesAvailable: 6),
       Book(id: _nextId++, title: 'Бесы', isbn: '978-5-17-118771-5', year: 1872, pages: 768, publisherId: 1, authorIds: [2], genreIds: [1, 3], copiesTotal: 5, copiesAvailable: 3),
     ];
-    _books.addAll(seedBooks);
   }
 
   @override
@@ -62,5 +90,73 @@ class InMemoryBookRepository implements BookRepository {
     } catch (_) {
       return null;
     }
+  }
+
+  @override
+  Future<Book> create(Book book) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    final newBook = Book(
+      id: _nextId++,
+      title: book.title,
+      isbn: book.isbn,
+      year: book.year,
+      pages: book.pages,
+      publisherId: book.publisherId,
+      authorIds: book.authorIds,
+      genreIds: book.genreIds,
+      copiesTotal: book.copiesTotal,
+      copiesAvailable: book.copiesAvailable,
+      deletedAt: book.deletedAt,
+    );
+  
+    _books.add(newBook);
+    await _saveToStorage();
+    return newBook;
+  }
+
+  @override
+  Future<Book> update(Book book) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    final index = _books.indexWhere((b) => b.id == book.id);
+    if (index == -1) throw StateError('Книга ${book.id} не найдена');
+    _books[index] = book;
+    await _saveToStorage();
+    return book;
+  }
+
+  @override
+  Future<void> softDelete(int id) async {
+    final index = _books.indexWhere((b) => b.id == id);
+    if (index == -1) throw StateError('Книга $id не найдена');
+    _books[index] = _books[index].copyWith(deletedAt: DateTime.now());
+    await _saveToStorage();
+  }
+
+  @override
+  Future<void> hardDelete(int id) async {
+    _books.removeWhere((b) => b.id == id);
+    await _saveToStorage();
+  }
+
+  @override
+  Future<void> restore(int id) async {
+    final index = _books.indexWhere((b) => b.id == id);
+    if (index == -1) throw StateError('Книга $id не найдена');
+    _books[index] = _books[index].copyWith(clearDeletedAt: true);
+    await _saveToStorage();
+  }
+
+  @override
+  Future<int> deleteMany(List<int> ids) async {
+    var count = 0;
+    for (final id in ids) {
+      final index = _books.indexWhere((b) => b.id == id && !b.isDeleted);
+      if (index != -1) {
+        _books[index] = _books[index].copyWith(deletedAt: DateTime.now());
+        count++;
+      }
+    }
+    await _saveToStorage();
+    return count;
   }
 }

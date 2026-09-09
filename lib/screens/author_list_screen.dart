@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../state/author_list_notifier.dart';
 import '../widgets/loading_widget.dart';
 import 'author_detail_screen.dart';
+import 'author_form_screen.dart';
 
 class AuthorListScreen extends StatelessWidget {
   const AuthorListScreen({super.key});
@@ -13,6 +14,20 @@ class AuthorListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Авторы'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AuthorFormScreen()),
+              );
+              if (result == true && context.mounted) {
+                context.read<AuthorListNotifier>().load();
+              }
+            },
+          ),
+        ],
       ),
       body: Consumer<AuthorListNotifier>(
         builder: (context, notifier, child) {
@@ -24,7 +39,7 @@ class AuthorListScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
                     const SizedBox(height: 16),
                     Text(notifier.error ?? 'Произошла ошибка', textAlign: TextAlign.center),
                     const SizedBox(height: 16),
@@ -77,15 +92,36 @@ class AuthorListScreen extends StatelessWidget {
                       Text('Годы жизни: ${author.birthYear}${author.deathYear != null ? ' - ${author.deathYear}' : ''}'),
                     ],
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => AuthorDetailScreen(authorId: author.id),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AuthorFormScreen(author: author),
+                            ),
+                          );
+                          if (result == true && context.mounted) {
+                            notifier.load();
+                          }
+                        },
                       ),
-                    );
-                  },
+                      IconButton(
+                        icon: const Icon(Icons.arrow_forward_ios),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AuthorDetailScreen(authorId: author.id),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../state/book_list_notifier.dart';
 import '../widgets/loading_widget.dart';
 import 'book_detail_screen.dart';
+import 'book_form_screen.dart';
 
 class BookListScreen extends StatelessWidget {
   const BookListScreen({super.key});
@@ -13,6 +14,20 @@ class BookListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Книги'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BookFormScreen()),
+              );
+              if (result == true && context.mounted) {
+                context.read<BookListNotifier>().load();
+              }
+            },
+          ),
+        ],
       ),
       body: Consumer<BookListNotifier>(
         builder: (context, notifier, child) {
@@ -24,7 +39,7 @@ class BookListScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
                     const SizedBox(height: 16),
                     Text(notifier.error ?? 'Произошла ошибка', textAlign: TextAlign.center),
                     const SizedBox(height: 16),
@@ -78,15 +93,36 @@ class BookListScreen extends StatelessWidget {
                       Text('Доступно: ${book.copiesAvailable}/${book.copiesTotal}'),
                     ],
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => BookDetailScreen(bookId: book.id),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BookFormScreen(book: book),
+                            ),
+                          );
+                          if (result == true && context.mounted) {
+                            notifier.load();
+                          }
+                        },
                       ),
-                    );
-                  },
+                      IconButton(
+                        icon: const Icon(Icons.arrow_forward_ios),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BookDetailScreen(bookId: book.id),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

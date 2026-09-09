@@ -1,17 +1,47 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/author.dart';
 import '../models/page_result.dart';
 import 'author_repository.dart';
 
 class InMemoryAuthorRepository implements AuthorRepository {
-  final List<Author> _authors = [];
+  List<Author> _authors = [];
   int _nextId = 1;
+  static const String _storageKey = 'authors_data';
 
   InMemoryAuthorRepository() {
+    _loadFromStorage();
+  }
+
+  Future<void> _loadFromStorage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = prefs.getString(_storageKey);
+      
+      if (jsonString != null && jsonString.isNotEmpty) {
+        final List<dynamic> jsonList = json.decode(jsonString);
+        _authors = jsonList.map((json) => Author.fromJson(json as Map<String, dynamic>)).toList();
+        _nextId = _authors.isEmpty ? 1 : _authors.map((a) => a.id).reduce((a, b) => a > b ? a : b) + 1;
+        return;
+      }
+    } catch (e) {
+      // Если не удалось загрузить, то используются начальные данные
+    }
     _initSeedData();
+    _saveToStorage();
+  }
+
+  Future<void> _saveToStorage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonList = _authors.map((author) => author.toJson()).toList();
+      await prefs.setString(_storageKey, json.encode(jsonList));
+    } catch (e) {
+    }
   }
 
   void _initSeedData() {
-    final seedAuthors = [
+    _authors = [
       Author(id: _nextId++, firstName: 'Лев', lastName: 'Толстой', country: 'Россия', birthYear: 1828, deathYear: 1910),
       Author(id: _nextId++, firstName: 'Фёдор', lastName: 'Достоевский', country: 'Россия', birthYear: 1821, deathYear: 1881),
       Author(id: _nextId++, firstName: 'Михаил', lastName: 'Булгаков', country: 'Россия', birthYear: 1891, deathYear: 1940),
@@ -21,7 +51,6 @@ class InMemoryAuthorRepository implements AuthorRepository {
       Author(id: _nextId++, firstName: 'Николай', lastName: 'Гоголь', country: 'Россия', birthYear: 1809, deathYear: 1852),
       Author(id: _nextId++, firstName: 'Михаил', lastName: 'Лермонтов', country: 'Россия', birthYear: 1814, deathYear: 1841),
     ];
-    _authors.addAll(seedAuthors);
   }
 
   @override
@@ -50,5 +79,69 @@ class InMemoryAuthorRepository implements AuthorRepository {
     } catch (_) {
       return null;
     }
+  }
+
+  @override
+  Future<Author> create(Author author) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    final newAuthor = Author(
+      id: _nextId++,
+      firstName: author.firstName,
+      lastName: author.lastName,
+      country: author.country,
+      birthYear: author.birthYear,
+      deathYear: author.deathYear,
+      deletedAt: author.deletedAt,
+    );
+  
+    _authors.add(newAuthor);
+    await _saveToStorage();
+    return newAuthor;
+  }
+
+  @override
+  Future<Author> update(Author author) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    final index = _authors.indexWhere((a) => a.id == author.id);
+    if (index == -1) throw StateError('Автор ${author.id} не найден');
+    _authors[index] = author;
+    await _saveToStorage();
+    return author;
+  }
+
+  @override
+  Future<void> softDelete(int id) async {
+    final index = _authors.indexWhere((a) => a.id == id);
+    if (index == -1) throw StateError('Автор $id не найден');
+    _authors[index] = _authors[index].copyWith(deletedAt: DateTime.now());
+    await _saveToStorage();
+  }
+
+  @override
+  Future<void> hardDelete(int id) async {
+    _authors.removeWhere((a) => a.id == id);
+    await _saveToStorage();
+  }
+
+  @override
+  Future<void> restore(int id) async {
+    final index = _authors.indexWhere((a) => a.id == id);
+    if (index == -1) throw StateError('Автор $id не найден');
+    _authors[index] = _authors[index].copyWith(clearDeletedAt: true);
+    await _saveToStorage();
+  }
+
+  @override
+  Future<int> deleteMany(List<int> ids) async {
+    var count = 0;
+    for (final id in ids) {
+      final index = _authors.indexWhere((a) => a.id == id && !a.isDeleted);
+      if (index != -1) {
+        _authors[index] = _authors[index].copyWith(deletedAt: DateTime.now());
+        count++;
+      }
+    }
+    await _saveToStorage();
+    return count;
   }
 }
