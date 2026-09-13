@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'network/dio_client.dart';
 import 'repositories/book_repository.dart';
 import 'repositories/author_repository.dart';
-import 'repositories/in_memory_book_repository.dart';
-import 'repositories/in_memory_author_repository.dart';
+import 'repositories/api_book_repository.dart';
+import 'repositories/api_author_repository.dart';
 import 'state/book_list_notifier.dart';
 import 'state/author_list_notifier.dart';
 import 'screens/book_list_screen.dart';
@@ -20,17 +21,21 @@ class LibraryApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<DioClient>(create: (_) => DioClient()),
+
+        // Репозитории обращаются к серверу, а не к памяти
         Provider<BookRepository>(
-          create: (_) => InMemoryBookRepository(),
+          create: (ctx) => ApiBookRepository(ctx.read<DioClient>()),
         ),
         Provider<AuthorRepository>(
-          create: (_) => InMemoryAuthorRepository(),
+          create: (ctx) => ApiAuthorRepository(ctx.read<DioClient>()),
+        ),
+
+        ChangeNotifierProvider(
+          create: (ctx) => BookListNotifier(ctx.read<BookRepository>()),
         ),
         ChangeNotifierProvider(
-          create: (context) => BookListNotifier(context.read<BookRepository>()),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AuthorListNotifier(context.read<AuthorRepository>()),
+          create: (ctx) => AuthorListNotifier(ctx.read<AuthorRepository>()),
         ),
       ],
       child: MaterialApp(
