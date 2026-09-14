@@ -74,4 +74,12 @@ class AuthorListNotifier extends ChangeNotifier {
       load();
     }
   }
+
+  void reset() {
+    _page = 1;
+    _result = PageResult.empty();
+    _status = LoadStatus.idle;
+    _error = null;
+    load();
+  }
 }

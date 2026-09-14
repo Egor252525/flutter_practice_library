@@ -140,4 +140,63 @@ class Validators {
 
     return null;
   }
+
+  static String? password(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Пароль обязателен';
+    }
+    final s = PasswordStrength.evaluate(value);
+    if (!s.hasMinLength) return 'Минимум 8 символов';
+    if (!s.hasDigit) return 'Добавьте хотя бы одну цифру';
+    if (!s.hasSpecial) return 'Добавьте специальный символ (!@#\$%...)';
+    return null;
+  }
+
+  static String? email(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Email обязателен';
+    }
+    final re = RegExp(r'^[\w\.\-]+@[\w\-]+\.[\w\-\.]+$');
+    if (!re.hasMatch(value.trim())) return 'Некорректный email';
+    return null;
+  }
+
+  static String? username(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Логин обязателен';
+    }
+    final trimmed = value.trim();
+    if (trimmed.length < 3) return 'Минимум 3 символа';
+    if (trimmed.length > 32) return 'Не более 32 символов';
+    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(trimmed)) {
+      return 'Только латиница, цифры и _';
+    }
+    return null;
+  }
+}
+
+class PasswordStrength {
+  final bool hasMinLength;
+  final bool hasDigit;
+  final bool hasSpecial;
+  final bool hasUppercase;
+
+  const PasswordStrength({
+    required this.hasMinLength,
+    required this.hasDigit,
+    required this.hasSpecial,
+    required this.hasUppercase,
+  });
+
+  bool get isValid => hasMinLength && hasDigit && hasSpecial;
+
+  static PasswordStrength evaluate(String password) {
+    return PasswordStrength(
+      hasMinLength: password.length >= 8,
+      hasDigit: RegExp(r'\d').hasMatch(password),
+      hasSpecial: RegExp(r'[!@#$%^&*(),.?":{}|<>_\-\[\]\\/;`~+=]')
+          .hasMatch(password),
+      hasUppercase: RegExp(r'[A-ZА-Я]').hasMatch(password),
+    );
+  }
 }

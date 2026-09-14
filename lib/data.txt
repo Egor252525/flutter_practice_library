@@ -1,0 +1,8 @@
+MyUser:
+
+Мерзлов Е.В
+Egor
+Egor@gmail.com
+12345678.
+
+mock-данные в mock-server.js
