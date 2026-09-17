@@ -53,24 +53,24 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       body: _loading
           ? const LoadingWidget(message: 'Загрузка книги...')
           : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.error_outline, size: 64, color: Colors.red),
-                      const SizedBox(height: 16),
-                      Text(_error!, textAlign: TextAlign.center),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _loadBook,
-                        child: const Text('Повторить'),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(_error!, textAlign: TextAlign.center),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _loadBook,
+                    child: const Text('Повторить'),
                   ),
-                )
-              : _book == null
-                  ? const Center(child: Text('Книга не найдена'))
-                  : _buildContent(context, _book!),
+                ],
+              ),
+            )
+          : _book == null
+          ? const Center(child: Text('Книга не найдена'))
+          : _buildContent(context, _book!),
     );
   }
 
@@ -83,7 +83,10 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(book.title, style: Theme.of(context).textTheme.headlineSmall),
+              Text(
+                book.title,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
               const Divider(),
               _buildInfoRow('ISBN', book.isbn),
               _buildInfoRow('Год издания', '${book.year}'),
@@ -108,7 +111,10 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
         children: [
           SizedBox(
             width: 120,
-            child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           Expanded(child: Text(value)),
         ],

@@ -46,9 +46,9 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       final author = Author(
         id: widget.author?.id ?? 0,
@@ -68,14 +68,17 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
       } else {
         await repo.update(author);
       }
-      
+
       if (mounted) {
         Navigator.pop(context, true);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка сохранения: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Ошибка сохранения: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -89,7 +92,9 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.author == null ? 'Создание автора' : 'Редактирование автора'),
+        title: Text(
+          widget.author == null ? 'Создание автора' : 'Редактирование автора',
+        ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           IconButton(
@@ -187,7 +192,8 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                         if (intVal == null) {
                           return 'Введите корректный год';
                         }
-                        final birthYear = int.tryParse(_birthYearController.text.trim()) ?? 0;
+                        final birthYear =
+                            int.tryParse(_birthYearController.text.trim()) ?? 0;
                         if (intVal <= birthYear) {
                           return 'Год смерти должен быть больше года рождения';
                         }
@@ -203,7 +209,9 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                       onPressed: _isLoading ? null : _save,
                       child: Padding(
                         padding: const EdgeInsets.all(16),
-                        child: Text(widget.author == null ? 'Создать' : 'Сохранить'),
+                        child: Text(
+                          widget.author == null ? 'Создать' : 'Сохранить',
+                        ),
                       ),
                     ),
                   ],

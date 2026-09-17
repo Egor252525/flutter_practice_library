@@ -39,9 +39,16 @@ class AuthorListScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
                     const SizedBox(height: 16),
-                    Text(notifier.error ?? 'Произошла ошибка', textAlign: TextAlign.center),
+                    Text(
+                      notifier.error ?? 'Произошла ошибка',
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: notifier.load,
@@ -84,12 +91,17 @@ class AuthorListScreen extends StatelessWidget {
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
                 child: ListTile(
-                  title: Text(author.fullName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text(
+                    author.fullName,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Страна: ${author.country}'),
-                      Text('Годы жизни: ${author.birthYear}${author.deathYear != null ? ' - ${author.deathYear}' : ''}'),
+                      Text(
+                        'Годы жизни: ${author.birthYear}${author.deathYear != null ? ' - ${author.deathYear}' : ''}',
+                      ),
                     ],
                   ),
                   trailing: Row(
@@ -115,7 +127,8 @@ class AuthorListScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => AuthorDetailScreen(authorId: author.id),
+                              builder: (_) =>
+                                  AuthorDetailScreen(authorId: author.id),
                             ),
                           );
                         },
@@ -147,7 +160,9 @@ class AuthorListScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.chevron_left),
-            onPressed: notifier.result.hasPrevious ? notifier.previousPage : null,
+            onPressed: notifier.result.hasPrevious
+                ? notifier.previousPage
+                : null,
           ),
           Text('${notifier.page} / ${notifier.result.totalPages}'),
           IconButton(
@@ -156,7 +171,9 @@ class AuthorListScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.last_page),
-            onPressed: notifier.page < notifier.result.totalPages ? notifier.lastPage : null,
+            onPressed: notifier.page < notifier.result.totalPages
+                ? notifier.lastPage
+                : null,
           ),
           const SizedBox(width: 16),
           Text('Всего: ${notifier.result.total}'),

@@ -39,9 +39,16 @@ class BookListScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
                     const SizedBox(height: 16),
-                    Text(notifier.error ?? 'Произошла ошибка', textAlign: TextAlign.center),
+                    Text(
+                      notifier.error ?? 'Произошла ошибка',
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: notifier.load,
@@ -84,13 +91,18 @@ class BookListScreen extends StatelessWidget {
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
                 child: ListTile(
-                  title: Text(book.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text(
+                    book.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('ISBN: ${book.isbn}'),
                       Text('Год: ${book.year}, Страниц: ${book.pages}'),
-                      Text('Доступно: ${book.copiesAvailable}/${book.copiesTotal}'),
+                      Text(
+                        'Доступно: ${book.copiesAvailable}/${book.copiesTotal}',
+                      ),
                     ],
                   ),
                   trailing: Row(
@@ -148,7 +160,9 @@ class BookListScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.chevron_left),
-            onPressed: notifier.result.hasPrevious ? notifier.previousPage : null,
+            onPressed: notifier.result.hasPrevious
+                ? notifier.previousPage
+                : null,
           ),
           Text('${notifier.page} / ${notifier.result.totalPages}'),
           IconButton(
@@ -157,7 +171,9 @@ class BookListScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.last_page),
-            onPressed: notifier.page < notifier.result.totalPages ? notifier.lastPage : null,
+            onPressed: notifier.page < notifier.result.totalPages
+                ? notifier.lastPage
+                : null,
           ),
           const SizedBox(width: 16),
           Text('Всего: ${notifier.result.total}'),

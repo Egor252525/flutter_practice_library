@@ -121,11 +121,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
-                        icon: Icon(_obscure1
-                            ? Icons.visibility
-                            : Icons.visibility_off),
-                        onPressed: () =>
-                            setState(() => _obscure1 = !_obscure1),
+                        icon: Icon(
+                          _obscure1 ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () => setState(() => _obscure1 = !_obscure1),
                       ),
                     ),
                     onChanged: (_) => setState(() {}),
@@ -141,11 +140,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
-                        icon: Icon(_obscure2
-                            ? Icons.visibility
-                            : Icons.visibility_off),
-                        onPressed: () =>
-                            setState(() => _obscure2 = !_obscure2),
+                        icon: Icon(
+                          _obscure2 ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () => setState(() => _obscure2 = !_obscure2),
                       ),
                     ),
                     validator: (v) {
@@ -166,8 +164,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ? const SizedBox(
                                 height: 20,
                                 width: 20,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Text('Зарегистрироваться'),
                       ),

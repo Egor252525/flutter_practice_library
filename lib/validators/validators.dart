@@ -6,7 +6,11 @@ class Validators {
     return null;
   }
 
-  static String? minLength(String? value, int min, {String fieldName = 'Поле'}) {
+  static String? minLength(
+    String? value,
+    int min, {
+    String fieldName = 'Поле',
+  }) {
     final trimmed = value?.trim() ?? '';
     if (trimmed.length < min) {
       return '$fieldName должно содержать не менее $min символов';
@@ -14,7 +18,11 @@ class Validators {
     return null;
   }
 
-  static String? maxLength(String? value, int max, {String fieldName = 'Поле'}) {
+  static String? maxLength(
+    String? value,
+    int max, {
+    String fieldName = 'Поле',
+  }) {
     final trimmed = value?.trim() ?? '';
     if (trimmed.length > max) {
       return '$fieldName должно содержать не более $max символов';
@@ -22,7 +30,12 @@ class Validators {
     return null;
   }
 
-  static String? range(int? value, int min, int max, {String fieldName = 'Поле'}) {
+  static String? range(
+    int? value,
+    int min,
+    int max, {
+    String fieldName = 'Поле',
+  }) {
     if (value == null) {
       return '$fieldName обязательно для заполнения';
     }
@@ -87,12 +100,20 @@ class Validators {
     if (!required && trimmed.isEmpty) return null;
 
     if (minLength != null) {
-      final minError = Validators.minLength(trimmed, minLength, fieldName: fieldName);
+      final minError = Validators.minLength(
+        trimmed,
+        minLength,
+        fieldName: fieldName,
+      );
       if (minError != null) return minError;
     }
 
     if (maxLength != null) {
-      final maxError = Validators.maxLength(trimmed, maxLength, fieldName: fieldName);
+      final maxError = Validators.maxLength(
+        trimmed,
+        maxLength,
+        fieldName: fieldName,
+      );
       if (maxError != null) return maxError;
     }
 
@@ -194,8 +215,9 @@ class PasswordStrength {
     return PasswordStrength(
       hasMinLength: password.length >= 8,
       hasDigit: RegExp(r'\d').hasMatch(password),
-      hasSpecial: RegExp(r'[!@#$%^&*(),.?":{}|<>_\-\[\]\\/;`~+=]')
-          .hasMatch(password),
+      hasSpecial: RegExp(
+        r'[!@#$%^&*(),.?":{}|<>_\-\[\]\\/;`~+=]',
+      ).hasMatch(password),
       hasUppercase: RegExp(r'[A-ZА-Я]').hasMatch(password),
     );
   }

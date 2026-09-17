@@ -12,16 +12,16 @@ class AppUser {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'username': username,
-        'email': email,
-        'fullName': fullName,
-      };
+    'id': id,
+    'username': username,
+    'email': email,
+    'fullName': fullName,
+  };
 
   factory AppUser.fromJson(Map<String, dynamic> json) => AppUser(
-        id: json['id'] as int? ?? 0,
-        username: json['username'] as String? ?? '',
-        email: json['email'] as String? ?? '',
-        fullName: json['fullName'] as String? ?? json['username'] as String? ?? '',
-      );
+    id: json['id'] as int? ?? 0,
+    username: json['username'] as String? ?? '',
+    email: json['email'] as String? ?? '',
+    fullName: json['fullName'] as String? ?? json['username'] as String? ?? '',
+  );
 }

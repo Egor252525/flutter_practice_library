@@ -64,10 +64,7 @@ class _MainScreenState extends State<MainScreen> {
           Expanded(
             child: IndexedStack(
               index: _index,
-              children: const [
-                BookListScreen(),
-                AuthorListScreen(),
-              ],
+              children: const [BookListScreen(), AuthorListScreen()],
             ),
           ),
         ],

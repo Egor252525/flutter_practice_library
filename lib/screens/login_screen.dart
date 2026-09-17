@@ -66,11 +66,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.local_library,
-                          size: 64, color: Colors.blue),
+                      const Icon(
+                        Icons.local_library,
+                        size: 64,
+                        color: Colors.blue,
+                      ),
                       const SizedBox(height: 16),
-                      Text('Вход в систему',
-                          style: Theme.of(context).textTheme.headlineSmall),
+                      Text(
+                        'Вход в систему',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
                       const SizedBox(height: 24),
                       TextFormField(
                         controller: _usernameController,
@@ -91,9 +96,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           border: const OutlineInputBorder(),
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
-                            icon: Icon(_obscure
-                                ? Icons.visibility
-                                : Icons.visibility_off),
+                            icon: Icon(
+                              _obscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
                             onPressed: () =>
                                 setState(() => _obscure = !_obscure),
                           ),
@@ -114,7 +121,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     height: 20,
                                     width: 20,
                                     child: CircularProgressIndicator(
-                                        strokeWidth: 2),
+                                      strokeWidth: 2,
+                                    ),
                                   )
                                 : const Text('Войти'),
                           ),
@@ -125,13 +133,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: _loading
                             ? null
                             : () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => const RegisterScreen(),
-                                  ),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const RegisterScreen(),
                                 ),
-                        child:
-                            const Text('Нет аккаунта? Зарегистрироваться'),
+                              ),
+                        child: const Text('Нет аккаунта? Зарегистрироваться'),
                       ),
                     ],
                   ),

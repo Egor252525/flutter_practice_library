@@ -18,11 +18,7 @@ class EntityTable<T> extends StatelessWidget {
   final List<EntityTableColumn<T>> columns;
   final List<T> items;
 
-  const EntityTable({
-    super.key,
-    required this.columns,
-    required this.items,
-  });
+  const EntityTable({super.key, required this.columns, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -34,17 +30,18 @@ class EntityTable<T> extends StatelessWidget {
             constraints: const BoxConstraints(minWidth: 600),
             child: DataTable(
               columns: columns
-                  .map((c) => DataColumn(
-                        label: Text(c.label),
-                        numeric: c.numeric,
-                      ))
+                  .map(
+                    (c) => DataColumn(label: Text(c.label), numeric: c.numeric),
+                  )
                   .toList(),
               rows: items
-                  .map((item) => DataRow(
-                        cells: columns
-                            .map((c) => DataCell(c.build(item)))
-                            .toList(),
-                      ))
+                  .map(
+                    (item) => DataRow(
+                      cells: columns
+                          .map((c) => DataCell(c.build(item)))
+                          .toList(),
+                    ),
+                  )
                   .toList(),
             ),
           ),

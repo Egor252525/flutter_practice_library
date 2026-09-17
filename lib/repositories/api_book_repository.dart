@@ -14,10 +14,7 @@ class ApiBookRepository implements BookRepository {
     try {
       final response = await _dio.get(
         '/books',
-        queryParameters: {
-          'page': page,
-          'size': size,
-        },
+        queryParameters: {'page': page, 'size': size},
       );
 
       final data = response.data as Map<String, dynamic>;
@@ -116,7 +113,9 @@ class ApiBookRepository implements BookRepository {
       case DioExceptionType.receiveTimeout:
         return Exception('Превышено время ожидания ответа от сервера');
       case DioExceptionType.connectionError:
-        return Exception('Не удалось подключиться к серверу. Проверьте соединение');
+        return Exception(
+          'Не удалось подключиться к серверу. Проверьте соединение',
+        );
       case DioExceptionType.badResponse:
         final code = e.response?.statusCode;
         final message = e.response?.data is Map

@@ -53,24 +53,24 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
       body: _loading
           ? const LoadingWidget(message: 'Загрузка автора...')
           : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.error_outline, size: 64, color: Colors.red),
-                      const SizedBox(height: 16),
-                      Text(_error!, textAlign: TextAlign.center),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _loadAuthor,
-                        child: const Text('Повторить'),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(_error!, textAlign: TextAlign.center),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _loadAuthor,
+                    child: const Text('Повторить'),
                   ),
-                )
-              : _author == null
-                  ? const Center(child: Text('Автор не найден'))
-                  : _buildContent(context, _author!),
+                ],
+              ),
+            )
+          : _author == null
+          ? const Center(child: Text('Автор не найден'))
+          : _buildContent(context, _author!),
     );
   }
 
@@ -83,7 +83,10 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(author.fullName, style: Theme.of(context).textTheme.headlineSmall),
+              Text(
+                author.fullName,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
               const Divider(),
               _buildInfoRow('Страна', author.country),
               _buildInfoRow('Год рождения', '${author.birthYear}'),
@@ -103,7 +106,10 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
         children: [
           SizedBox(
             width: 120,
-            child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           Expanded(child: Text(value)),
         ],

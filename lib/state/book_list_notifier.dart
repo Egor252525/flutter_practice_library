@@ -7,7 +7,7 @@ enum LoadStatus { idle, loading, success, error }
 
 class BookListNotifier extends ChangeNotifier {
   final BookRepository _repository;
-  
+
   int _page = 1;
   final int _size = 10;
   PageResult<Book> _result = PageResult.empty();
@@ -80,6 +80,6 @@ class BookListNotifier extends ChangeNotifier {
     _result = PageResult.empty();
     _status = LoadStatus.idle;
     _error = null;
-    load(); 
+    load();
   }
 }

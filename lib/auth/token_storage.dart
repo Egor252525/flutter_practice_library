@@ -34,11 +34,7 @@ class TokenStorage {
       user = const AppUser(id: 0, username: '', email: '', fullName: '');
     }
 
-    return AuthSession(
-      accessToken: access,
-      refreshToken: refresh,
-      user: user,
-    );
+    return AuthSession(accessToken: access, refreshToken: refresh, user: user);
   }
 
   Future<void> clear() async {

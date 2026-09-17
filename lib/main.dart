@@ -37,10 +37,7 @@ class _LibraryAppState extends State<LibraryApp> {
 
     _dioClient = DioClient();
 
-    _auth = AuthNotifier(
-      ApiAuthRepository(_dioClient),
-      TokenStorage(),
-    );
+    _auth = AuthNotifier(ApiAuthRepository(_dioClient), TokenStorage());
 
     // Сначала провайдер, потом restore
     _dioClient.tokenProvider = () => _auth.accessToken;
@@ -57,7 +54,8 @@ class _LibraryAppState extends State<LibraryApp> {
         Provider<AuthRepository>.value(value: ApiAuthRepository(_dioClient)),
         Provider<BookRepository>.value(value: ApiBookRepository(_dioClient)),
         Provider<AuthorRepository>.value(
-            value: ApiAuthorRepository(_dioClient)),
+          value: ApiAuthorRepository(_dioClient),
+        ),
         ChangeNotifierProvider<AuthNotifier>.value(value: _auth),
         ChangeNotifierProvider(
           create: (ctx) => BookListNotifier(ctx.read<BookRepository>()),
@@ -87,9 +85,7 @@ class AuthGate extends StatelessWidget {
 
     switch (auth.status) {
       case AuthStatus.unknown:
-        return const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       case AuthStatus.authenticated:
         return const MainScreen();
       case AuthStatus.unauthenticated:

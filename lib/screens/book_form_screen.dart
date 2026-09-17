@@ -22,7 +22,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
   final _publisherIdController = TextEditingController();
   final _copiesTotalController = TextEditingController();
   final _copiesAvailableController = TextEditingController();
-  
+
   List<int> _authorIds = [];
   List<int> _genreIds = [];
   bool _isLoading = false;
@@ -57,9 +57,9 @@ class _BookFormScreenState extends State<BookFormScreen> {
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       final book = Book(
         id: widget.book?.id ?? 0,
@@ -81,14 +81,17 @@ class _BookFormScreenState extends State<BookFormScreen> {
       } else {
         await repo.update(book);
       }
-      
+
       if (mounted) {
         Navigator.pop(context, true);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка сохранения: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Ошибка сохранения: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -102,7 +105,9 @@ class _BookFormScreenState extends State<BookFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.book == null ? 'Создание книги' : 'Редактирование книги'),
+        title: Text(
+          widget.book == null ? 'Создание книги' : 'Редактирование книги',
+        ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           IconButton(
@@ -283,7 +288,9 @@ class _BookFormScreenState extends State<BookFormScreen> {
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         final intVal = int.tryParse(value?.trim() ?? '');
-                        final total = int.tryParse(_copiesTotalController.text.trim()) ?? 0;
+                        final total =
+                            int.tryParse(_copiesTotalController.text.trim()) ??
+                            0;
                         final error = Validators.number(
                           value: intVal,
                           fieldName: 'Доступно экземпляров',
@@ -303,7 +310,9 @@ class _BookFormScreenState extends State<BookFormScreen> {
                       onPressed: _isLoading ? null : _save,
                       child: Padding(
                         padding: const EdgeInsets.all(16),
-                        child: Text(widget.book == null ? 'Создать' : 'Сохранить'),
+                        child: Text(
+                          widget.book == null ? 'Создать' : 'Сохранить',
+                        ),
                       ),
                     ),
                   ],

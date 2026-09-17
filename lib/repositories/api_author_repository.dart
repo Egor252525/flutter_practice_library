@@ -58,7 +58,10 @@ class ApiAuthorRepository implements AuthorRepository {
   @override
   Future<Author> update(Author author) async {
     try {
-      final response = await _dio.put('/authors/${author.id}', data: author.toJson());
+      final response = await _dio.put(
+        '/authors/${author.id}',
+        data: author.toJson(),
+      );
       return Author.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw _mapError(e);
@@ -112,7 +115,9 @@ class ApiAuthorRepository implements AuthorRepository {
       case DioExceptionType.receiveTimeout:
         return Exception('Превышено время ожидания ответа от сервера');
       case DioExceptionType.connectionError:
-        return Exception('Не удалось подключиться к серверу. Проверьте соединение');
+        return Exception(
+          'Не удалось подключиться к серверу. Проверьте соединение',
+        );
       case DioExceptionType.badResponse:
         final code = e.response?.statusCode;
         final message = e.response?.data is Map

@@ -7,7 +7,7 @@ enum LoadStatus { idle, loading, success, error }
 
 class AuthorListNotifier extends ChangeNotifier {
   final AuthorRepository _repository;
-  
+
   int _page = 1;
   final int _size = 10;
   PageResult<Author> _result = PageResult.empty();

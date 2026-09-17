@@ -10,10 +10,10 @@ class ApiAuthRepository implements AuthRepository {
   @override
   Future<AuthSession> login(String username, String password) async {
     try {
-      final response = await _dio.post('/auth/login', data: {
-        'username': username,
-        'password': password,
-      });
+      final response = await _dio.post(
+        '/auth/login',
+        data: {'username': username, 'password': password},
+      );
       return _parseSession(response);
     } on DioException catch (e) {
       throw _mapError(e);
@@ -28,12 +28,15 @@ class ApiAuthRepository implements AuthRepository {
     required String fullName,
   }) async {
     try {
-      final response = await _dio.post('/auth/register', data: {
-        'username': username,
-        'email': email,
-        'password': password,
-        'fullName': fullName,
-      });
+      final response = await _dio.post(
+        '/auth/register',
+        data: {
+          'username': username,
+          'email': email,
+          'password': password,
+          'fullName': fullName,
+        },
+      );
       return _parseSession(response);
     } on DioException catch (e) {
       throw _mapError(e);
@@ -76,7 +79,8 @@ class ApiAuthRepository implements AuthRepository {
         return Exception('Превышено время ожидания ответа от сервера');
       case DioExceptionType.connectionError:
         return Exception(
-            'Не удалось подключиться к серверу. Проверьте соединение');
+          'Не удалось подключиться к серверу. Проверьте соединение',
+        );
       case DioExceptionType.cancel:
         return Exception('Запрос отменён');
       default:
