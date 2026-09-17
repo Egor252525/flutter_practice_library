@@ -37,6 +37,7 @@ class InMemoryAuthorRepository implements AuthorRepository {
       final jsonList = _authors.map((author) => author.toJson()).toList();
       await prefs.setString(_storageKey, json.encode(jsonList));
     } catch (e) {
+      //
     }
   }
 

@@ -25,6 +25,7 @@ class InMemoryBookRepository implements BookRepository {
         return;
       }
     } catch (e) {
+      //
     }
     _initSeedData();
     _saveToStorage();
@@ -36,6 +37,7 @@ class InMemoryBookRepository implements BookRepository {
       final jsonList = _books.map((book) => book.toJson()).toList();
       await prefs.setString(_storageKey, json.encode(jsonList));
     } catch (e) {
+      //
     }
   }
 
